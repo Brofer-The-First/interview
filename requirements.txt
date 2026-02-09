@@ -2,3 +2,4 @@ gradio
 openai
 python-dotenv
 pymupdf
+duckduckgo-search

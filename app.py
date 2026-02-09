@@ -2,6 +2,7 @@ import json
 import os
 import smtplib
 import traceback
+from datetime import date
 from email.mime.text import MIMEText
 import gradio as gr
 from openai import OpenAI
@@ -31,31 +32,39 @@ def send_error_email(error):
         server.sendmail(smtp_user, ALERT_EMAIL, msg.as_string())
 
 
-SYSTEM_PROMPT = """You are Ofer Brodatch, a full-stack software developer. You are being interviewed by someone who wants to learn about your background, skills, and experience.
+SYSTEM_PROMPT = """You are Ofer Brodatch, a full-stack software developer. You are being interviewed by a potential employer who wants to learn about your background, skills, and experience.
 
 You have tools to list and read documents that contain information about you. Use them to ground your answers in facts. On the first message, call list_documents to see what's available, then read relevant documents before answering.
+You also have a web search tool to find up-to-date information if needed, but most of the relevant information about you should be in the documents. When using this tool, make sure your response does not give away the fact that you are using it, keeping your response natural and reflecting what the real Ofer would say. 
 
 Rules:
 - Answer as Ofer, in first person.
-- Be professional, personable, and concise.
+- Do not give away in your response anything about how you are using the tools. For example, if you read a document to find out about your education, do not say "According to my education document...". Instead, just state the relevant facts about your education as if you know them.
+- You're being interviewed for software dev positions, so focus on relevant experience.
+- Be professional, personable and concise (Important! people expect this in interviews). Think what the real Ofer would say in an interview.
 - Only state things supported by the documents. If asked something not covered, say you'd be happy to discuss it further in a live conversation.
+- Always answer in English. If asked in another language which Ofer speaks, respond in English and add that the real Ofer would be happy to demonstrate his skills in that language in a live interview.
 - Do not fabricate experiences, projects, or skills not mentioned in the documents."""
 
 
 def chat(message, history):
-    messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+    today = date.today().isoformat()
+    messages = [{"role": "system", "content": f"Today's date is {today}.\n\n{SYSTEM_PROMPT}"}]
 
     for msg in history:
-        messages.append({"role": msg["role"], "content": msg["content"]})
+        content = msg["content"]
+        if isinstance(content, list):
+            content = "".join(part["text"] for part in content if "text" in part)
+        messages.append({"role": msg["role"], "content": content})
 
     messages.append({"role": "user", "content": message})
 
     # Tool use loop
     while True:
         try:
-            response = client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=messages,
+            response = client.responses.create(
+                model="gpt-4o",
+                input=messages,
                 tools=TOOL_SCHEMAS,
             )
         except Exception as e:
@@ -65,30 +74,31 @@ def chat(message, history):
                 pass
             return "An error has occurred while communicating with the OpenAI API. Please try again later."
 
-        choice = response.choices[0]
+        # Check for function calls in output
+        tool_calls = [item for item in response.output if item.type == "function_call"]
 
-        if choice.finish_reason == "tool_calls":
-            # Append the assistant message with tool calls
-            messages.append(choice.message)
+        if tool_calls:
+            # Add all output items to input for next round
+            messages += response.output
 
             # Execute each tool call and append results
-            for tool_call in choice.message.tool_calls:
-                fn_name = tool_call.function.name
-                fn_args = json.loads(tool_call.function.arguments)
+            for tool_call in tool_calls:
+                fn_name = tool_call.name
+                fn_args = json.loads(tool_call.arguments)
 
                 result = TOOL_FUNCTIONS[fn_name](**fn_args)
 
                 messages.append({
-                    "role": "tool",
-                    "tool_call_id": tool_call.id,
-                    "content": result,
+                    "type": "function_call_output",
+                    "call_id": tool_call.call_id,
+                    "output": result,
                 })
 
             # Loop back to get the next response
             continue
 
         # Regular text response — return it
-        return choice.message.content
+        return response.output_text
 
 
 demo = gr.ChatInterface(
