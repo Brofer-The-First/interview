@@ -101,7 +101,7 @@ def chat(message, history):
 
 demo = gr.ChatInterface(
     fn=chat,
-    title="Interview Ofer Brodatch",
+    title="Ofer Brodatch - Interview Bot",
     description="Ask me anything about my background, skills, and experience.",
     examples=[
         "Tell me about yourself.",
@@ -109,6 +109,7 @@ demo = gr.ChatInterface(
         "What technologies do you work with?",
         "Tell me about your education.",
         "What languages do you speak?",
+        "What are your hobbies and interests?"
     ],
 )
 
