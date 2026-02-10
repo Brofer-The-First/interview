@@ -71,33 +71,76 @@ def chat(message, history):
                 send_error_email(e)
             except Exception:
                 pass
-            return "An error has occurred while communicating with the OpenAI API. Please try again later."
+            return None
 
-        # Check for function calls in output
         tool_calls = [item for item in response.output if item.type == "function_call"]
 
         if tool_calls:
-            # Add all output items to input for next round
             messages += response.output
-
-            # Execute each tool call and append results
             for tool_call in tool_calls:
                 fn_name = tool_call.name
                 fn_args = json.loads(tool_call.arguments)
-
                 result = TOOL_FUNCTIONS[fn_name](**fn_args)
-
                 messages.append({
                     "type": "function_call_output",
                     "call_id": tool_call.call_id,
                     "output": result,
                 })
-
-            # Loop back to get the next response
             continue
 
-        # Regular text response — return it
         return response.output_text
+
+
+def validate_response(system_prompt, user_message, bot_response):
+    """Ask a reviewer LLM to validate the bot's response. Returns feedback or None if approved."""
+    review_input = (
+        f"## System Prompt\n{system_prompt}\n\n"
+        f"## User Question\n{user_message}\n\n"
+        f"## Bot Response\n{bot_response}"
+    )
+    messages = [
+        {"role": "system", "content": REVIEWER_PROMPT},
+        {"role": "user", "content": review_input},
+    ]
+    feedback = call_llm(messages)
+    if feedback and feedback.strip() == "APPROVED":
+        return None
+    return feedback
+
+
+def chat(message, history):
+    today = date.today().isoformat()
+    system_prompt = f"Today's date is {today}.\n\n{SYSTEM_PROMPT}"
+    messages = [{"role": "system", "content": system_prompt}]
+
+    for msg in history:
+        content = msg["content"]
+        if isinstance(content, list):
+            content = "".join(part["text"] for part in content if "text" in part)
+        messages.append({"role": msg["role"], "content": content})
+
+    messages.append({"role": "user", "content": message})
+
+    # Generate initial response
+    bot_response = call_llm(list(messages))
+    if bot_response is None:
+        return "An error has occurred while communicating with the OpenAI API. Please try again later."
+
+    # Validate with reviewer
+    feedback = validate_response(system_prompt, message, bot_response)
+
+    if feedback:
+        # Ask the original LLM to revise based on feedback
+        messages.append({"role": "assistant", "content": bot_response})
+        messages.append({"role": "user", "content": (
+            f"A reviewer has flagged issues with your previous response. "
+            f"Please revise your answer based on this feedback:\n\n{feedback}"
+        )})
+        revised = call_llm(messages)
+        if revised is not None:
+            return revised
+
+    return bot_response
 
 
 demo = gr.ChatInterface(
