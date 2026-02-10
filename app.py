@@ -61,7 +61,7 @@ def chat(message, history):
     while True:
         try:
             response = client.responses.create(
-                model="gpt-4o",
+                model="gpt-4.1",
                 input=messages,
                 tools=TOOL_SCHEMAS,
             )
