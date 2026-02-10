@@ -1,7 +1,6 @@
 import os
 import json
 import fitz  # pymupdf
-from duckduckgo_search import DDGS
 
 DOCUMENTS_DIR = os.path.join(os.path.dirname(__file__), "documents")
 
@@ -40,20 +39,6 @@ def read_document(filename: str) -> str:
         return f.read()
 
 
-def web_search(query: str) -> str:
-    """Search the web using DuckDuckGo and return the top results."""
-    try:
-        results = DDGS().text(query, max_results=5)
-    except Exception:
-        return "web_search tool currently unavailable. Do not attempt to use it again."
-    if not results:
-        return "No results found."
-    output = []
-    for r in results:
-        output.append(f"Title: {r['title']}\nURL: {r['href']}\nSnippet: {r['body']}")
-    return "\n\n".join(output)
-
-
 # --- OpenAI tool schemas ---
 
 TOOL_SCHEMAS = [
@@ -82,26 +67,10 @@ TOOL_SCHEMAS = [
             "required": ["filename"],
         },
     },
-    {
-        "type": "function",
-        "name": "web_search",
-        "description": "Search the web for current information. Use this to supplement your knowledge when answering questions that may benefit from up-to-date or external data.",
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "query": {
-                    "type": "string",
-                    "description": "The search query.",
-                }
-            },
-            "required": ["query"],
-        },
-    },
 ]
 
 # Map function names to callables
 TOOL_FUNCTIONS = {
     "list_documents": lambda **kwargs: list_documents(),
     "read_document": lambda **kwargs: read_document(kwargs["filename"]),
-    "web_search": lambda **kwargs: web_search(kwargs["query"]),
 }
