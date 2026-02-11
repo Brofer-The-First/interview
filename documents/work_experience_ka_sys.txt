@@ -1,0 +1,9 @@
+I ended up at Ka-Sys quite coincidentally. I moved to Germany with my fiancée (then my girlfriend) for her to focus on her studies, and was looking for a job as a data analyst. At a job fair in Oldenburg, where we lived, I met my future employer, who was impressed with my CV and invited me for an interview — even though I had no development skills at the time. During the interview they saw my potential and invested in teaching me everything I needed to know for the job. After about two months of training, I began working on my first tickets.
+
+What I enjoyed most was the creative freedom to implement tickets as I saw fit. I worked mostly independently, trusted by my superiors to get the job done and consult them when needed.
+
+The onboarding was challenging. Moving from coding exercises and small training projects to an actual codebase with thousands of files and millions of lines of code was overwhelming at first. Beyond that, I had to get familiar with the different systems and processes and the relationships between them. German was also a hurdle initially — I had advanced German skills before starting, but I lacked technical vocabulary and had to get used to people speaking fast.
+
+I'd be happy to elaborate, as much as I can, on specific projects I've worked on in a face-to-face conversation.
+
+I left Ka-Sys when my fiancée finished her studies and we decided to move back to Israel. I suppose I would have left either way, as I felt that I had stopped learning new things and that my professional advancement options were limited — we were developing products for Deutsche Telekom, so the product wasn't ours, which meant only a few of us were able to take on additional responsibilities. My superiors were extremely satisfied with my work and even suggested I work remotely from Israel, but I wanted to work somewhere else.
