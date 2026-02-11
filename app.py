@@ -103,7 +103,7 @@ def chat(message, history):
 demo = gr.ChatInterface(
     fn=chat,
     title="Ofer Brodatch - Interview Bot",
-    description="Ask me anything about my background, skills, and experience.",
+    description="",
     examples=[
         "Tell me about yourself.",
         "What is your professional experience?",
