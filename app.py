@@ -110,6 +110,8 @@ demo = gr.ChatInterface(
         "What technologies do you work with?",
         "Tell me about your education.",
         "What languages do you speak?",
+        "What are you looking for in a job?",
+        "Where do you see yourself in 5 years?",
         "What are your hobbies and interests?"
     ],
 )
