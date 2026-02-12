@@ -1,11 +1,12 @@
 import json
 import os
 import smtplib
+import time
 import traceback
 from datetime import date
 from email.mime.text import MIMEText
 import gradio as gr
-from openai import OpenAI
+from openai import OpenAI, RateLimitError
 from dotenv import load_dotenv
 from tools import TOOL_SCHEMAS, TOOL_FUNCTIONS
 
@@ -66,6 +67,9 @@ def chat(message, history):
                 input=messages,
                 tools=TOOL_SCHEMAS,
             )
+        except RateLimitError:
+            time.sleep(5)
+            continue
         except Exception as e:
             try:
                 send_error_email(e)
