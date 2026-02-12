@@ -44,24 +44,14 @@ def read_document(filename: str) -> str:
 TOOL_SCHEMAS = [
     {
         "type": "function",
-        "name": "list_documents",
-        "description": "List all available documents about Ofer Brodatch. Call this first to discover what information is available.",
-        "parameters": {
-            "type": "object",
-            "properties": {},
-            "required": [],
-        },
-    },
-    {
-        "type": "function",
         "name": "read_document",
-        "description": "Read the full content of a specific document about Ofer Brodatch.",
+        "description": "Read the full content of a specific document about Ofer Brodatch. You MUST call this before every response.",
         "parameters": {
             "type": "object",
             "properties": {
                 "filename": {
                     "type": "string",
-                    "description": "The filename of the document to read (as returned by list_documents).",
+                    "description": "The filename of the document to read (from the list in the system prompt).",
                 }
             },
             "required": ["filename"],
