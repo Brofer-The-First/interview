@@ -1,8 +1,11 @@
 import os
 import json
+import smtplib
+from email.mime.text import MIMEText
 import fitz  # pymupdf
 
 DOCUMENTS_DIR = os.path.join(os.path.dirname(__file__), "documents")
+ALERT_EMAIL = "ofer.brodatch@gmail.com"
 
 # --- Tool implementations ---
 
@@ -39,32 +42,76 @@ def read_document(filename: str) -> str:
         return f.read()
 
 
+def notify_missing_info(user_question: str, bot_response: str, missing_info: str) -> str:
+    """Send an email to Ofer when the chatbot feels the documents lack info."""
+    smtp_user = os.environ["SMTP_USER"]
+    smtp_password = os.environ["SMTP_PASSWORD"]
+
+    body = (
+        f"A user asked a question that the documents couldn't fully cover.\n\n"
+        f"--- User's Question ---\n{user_question}\n\n"
+        f"--- Bot's Response ---\n{bot_response}\n\n"
+        f"--- Missing Information ---\n{missing_info}\n"
+    )
+    msg = MIMEText(body)
+    msg["Subject"] = "Interview Bot - Missing Info Alert"
+    msg["From"] = smtp_user
+    msg["To"] = ALERT_EMAIL
+
+    try:
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            server.starttls()
+            server.login(smtp_user, smtp_password)
+            server.sendmail(smtp_user, ALERT_EMAIL, msg.as_string())
+        return "Notification sent."
+    except Exception:
+        return "Notification failed."
+
+
 # --- OpenAI tool schemas ---
 
 TOOL_SCHEMAS = [
     {
         "type": "function",
-        "name": "list_documents",
-        "description": "List all available documents about Ofer Brodatch. Call this first to discover what information is available.",
-        "parameters": {
-            "type": "object",
-            "properties": {},
-            "required": [],
-        },
-    },
-    {
-        "type": "function",
         "name": "read_document",
-        "description": "Read the full content of a specific document about Ofer Brodatch.",
+        "description": "Read information about Ofer Brodatch. You MUST call this at least once before EVERY response — even if you think you already know the answer. Your memory of previous reads is unreliable. Never respond without reading first. Available files: " + list_documents(),
         "parameters": {
             "type": "object",
             "properties": {
                 "filename": {
                     "type": "string",
-                    "description": "The filename of the document to read (as returned by list_documents).",
+                    "description": "The filename to read (from the list in the tool description).",
                 }
             },
             "required": ["filename"],
+        },
+    },
+    {
+        "type": "function",
+        "name": "notify_missing_info",
+        "description": (
+            "Call this when the user asks something the documents don't cover. "
+            "This emails Ofer about the gap. After calling this, tell the user you've emailed Ofer about it. "
+            "Frame the missing_info as a clear question (e.g. 'What CI/CD tools does Ofer use?'). "
+            "Include your drafted response in bot_response so it can be reviewed."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "user_question": {
+                    "type": "string",
+                    "description": "The user's original question.",
+                },
+                "bot_response": {
+                    "type": "string",
+                    "description": "The response you plan to give to the user.",
+                },
+                "missing_info": {
+                    "type": "string",
+                    "description": "The information gap, phrased as a question.",
+                },
+            },
+            "required": ["user_question", "bot_response", "missing_info"],
         },
     },
 ]
@@ -73,4 +120,7 @@ TOOL_SCHEMAS = [
 TOOL_FUNCTIONS = {
     "list_documents": lambda **kwargs: list_documents(),
     "read_document": lambda **kwargs: read_document(kwargs["filename"]),
+    "notify_missing_info": lambda **kwargs: notify_missing_info(
+        kwargs["user_question"], kwargs["bot_response"], kwargs["missing_info"]
+    ),
 }
