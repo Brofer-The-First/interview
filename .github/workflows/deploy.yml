@@ -14,11 +14,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          lfs: true
 
       - name: Push to HuggingFace Space (prod)
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
+          git lfs install
           git remote add hf https://Brofer:${HF_TOKEN}@huggingface.co/spaces/Brofer/interview
           git push hf HEAD:main --force
 
@@ -29,10 +31,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          lfs: true
 
       - name: Push to HuggingFace Space (preprod)
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
+          git lfs install
           git remote add hf https://Brofer:${HF_TOKEN}@huggingface.co/spaces/Brofer/interview-preprod
           git push hf HEAD:main --force
