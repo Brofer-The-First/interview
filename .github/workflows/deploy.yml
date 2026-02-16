@@ -13,7 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
           lfs: true
 
       - name: Push to HuggingFace Space (prod)
@@ -21,8 +20,11 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           git lfs install
+          git checkout --orphan deploy
+          git add -A
+          git commit -m "Deploy"
           git remote add hf https://Brofer:${HF_TOKEN}@huggingface.co/spaces/Brofer/interview
-          git push hf HEAD:main --force
+          git push hf deploy:main --force
 
   deploy-preprod:
     if: github.ref == 'refs/heads/preprod'
@@ -30,7 +32,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
           lfs: true
 
       - name: Push to HuggingFace Space (preprod)
@@ -38,5 +39,8 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           git lfs install
+          git checkout --orphan deploy
+          git add -A
+          git commit -m "Deploy"
           git remote add hf https://Brofer:${HF_TOKEN}@huggingface.co/spaces/Brofer/interview-preprod
-          git push hf HEAD:main --force
+          git push hf deploy:main --force
