@@ -19,6 +19,8 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
+          git config user.email "ofer.brodatch@gmail.com"
+          git config user.name "Brofer-The-First"
           git lfs install
           git checkout --orphan deploy
           git add -A
@@ -38,6 +40,8 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
+          git config user.email "ofer.brodatch@gmail.com"
+          git config user.name "Brofer-The-First"
           git lfs install
           git checkout --orphan deploy
           git add -A
