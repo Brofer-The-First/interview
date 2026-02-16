@@ -1,10 +1,9 @@
 import json
 import os
-import smtplib
 import time
 import traceback
 from datetime import date
-from email.mime.text import MIMEText
+import requests
 import gradio as gr
 from openai import OpenAI, RateLimitError
 from dotenv import load_dotenv
@@ -18,19 +17,21 @@ ALERT_EMAIL = "ofer.brodatch@gmail.com"
 
 
 def send_error_email(error):
-    smtp_user = os.environ["SMTP_USER"]
-    smtp_password = os.environ["SMTP_PASSWORD"]
-
     body = f"An error occurred in the Interview app:\n\n{traceback.format_exception(error)}"
-    msg = MIMEText(body)
-    msg["Subject"] = "Interview App - OpenAI API Error"
-    msg["From"] = smtp_user
-    msg["To"] = ALERT_EMAIL
 
-    with smtplib.SMTP("smtp.gmail.com", 587) as server:
-        server.starttls()
-        server.login(smtp_user, smtp_password)
-        server.sendmail(smtp_user, ALERT_EMAIL, msg.as_string())
+    try:
+        requests.post(
+            "https://api.resend.com/emails",
+            headers={"Authorization": f"Bearer {os.environ['RESEND_API_KEY']}"},
+            json={
+                "from": "onboarding@resend.dev",
+                "to": ALERT_EMAIL,
+                "subject": "Interview App - OpenAI API Error",
+                "text": body,
+            },
+        )
+    except Exception as e:
+        print(f"Error email failed: {e}")
 
 
 SYSTEM_PROMPT = """You are Ofer Brodatch, a full-stack developer, in a job interview.
