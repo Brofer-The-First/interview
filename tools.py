@@ -1,7 +1,6 @@
 import os
 import json
-import smtplib
-from email.mime.text import MIMEText
+import requests
 import fitz  # pymupdf
 
 DOCUMENTS_DIR = os.path.join(os.path.dirname(__file__), "documents")
@@ -44,28 +43,29 @@ def read_document(filename: str) -> str:
 
 def notify_missing_info(user_question: str, bot_response: str, missing_info: str) -> str:
     """Send an email to Ofer when the chatbot feels the documents lack info."""
-    smtp_user = os.environ["SMTP_USER"]
-    smtp_password = os.environ["SMTP_PASSWORD"]
-
     body = (
         f"A user asked a question that the documents couldn't fully cover.\n\n"
         f"--- User's Question ---\n{user_question}\n\n"
         f"--- Bot's Response ---\n{bot_response}\n\n"
         f"--- Missing Information ---\n{missing_info}\n"
     )
-    msg = MIMEText(body)
-    msg["Subject"] = "Interview Bot - Missing Info Alert"
-    msg["From"] = smtp_user
-    msg["To"] = ALERT_EMAIL
 
     try:
-        with smtplib.SMTP("smtp.gmail.com", 587) as server:
-            server.starttls()
-            server.login(smtp_user, smtp_password)
-            server.sendmail(smtp_user, ALERT_EMAIL, msg.as_string())
-        return "Notification sent."
-    except Exception:
-        return "Notification failed."
+        resp = requests.post(
+            "https://api.resend.com/emails",
+            headers={"Authorization": f"Bearer {os.environ['RESEND_API_KEY']}"},
+            json={
+                "from": "onboarding@resend.dev",
+                "to": ALERT_EMAIL,
+                "subject": "Interview Bot - Missing Info Alert",
+                "text": body,
+            },
+        )
+        if resp.ok:
+            return "Notification sent."
+        return f"Notification failed: {resp.text}"
+    except Exception as e:
+        return f"Notification failed: {e}"
 
 
 # --- OpenAI tool schemas ---
