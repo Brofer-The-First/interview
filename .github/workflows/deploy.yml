@@ -1,0 +1,38 @@
+name: Deploy to HuggingFace Spaces
+
+on:
+  push:
+    branches:
+      - main
+      - preprod
+
+jobs:
+  deploy-prod:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Push to HuggingFace Space (prod)
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git remote add hf https://Brofer:${HF_TOKEN}@huggingface.co/spaces/Brofer/interview
+          git push hf HEAD:main --force
+
+  deploy-preprod:
+    if: github.ref == 'refs/heads/preprod'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Push to HuggingFace Space (preprod)
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git remote add hf https://Brofer:${HF_TOKEN}@huggingface.co/spaces/Brofer/interview-preprod
+          git push hf HEAD:main --force
