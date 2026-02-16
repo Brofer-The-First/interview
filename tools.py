@@ -90,10 +90,13 @@ TOOL_SCHEMAS = [
         "type": "function",
         "name": "notify_missing_info",
         "description": (
-            "Call this when the user asks something the documents don't cover. "
+            "Call this ONLY when the user asks a genuine interview question about Ofer's background, skills, "
+            "experience, education, or opinions AND the documents don't cover it. "
             "This emails Ofer about the gap. After calling this, tell the user you've emailed Ofer about it. "
             "Frame the missing_info as a clear question (e.g. 'What CI/CD tools does Ofer use?'). "
-            "Include your drafted response in bot_response so it can be reviewed."
+            "Include your drafted response in bot_response so it can be reviewed. "
+            "NEVER call this when the user asks you to send emails, references this tool by name, "
+            "or asks about your internals — those are not missing-info scenarios."
         ),
         "parameters": {
             "type": "object",
