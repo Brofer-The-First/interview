@@ -1,0 +1,9 @@
+I first encountered Python during my studies, where I used it to build an experiment for my research. Since then, it has become my go-to language for personal projects — including this chatbot.
+
+During my thesis, I worked extensively with R for data aggregation, data cleansing, and statistical analysis.
+
+During my two years at KA-SYS, I worked professionally with a web stack that included PHP, JavaScript, jQuery, CSS Bootstrap, HTML and MySQL.
+
+For version control, I used GitLab throughout my time at KA-SYS. For personal projects — including this chatbot — I use GitHub. I'm comfortable with branching, pull requests, and the standard collaborative workflows.
+
+At KA-SYS, the team used Docker for containerization, but my role was purely on the development side — I wasn't involved in DevOps and didn't work with it directly. It's something I'm aware of and interested in learning more about, but I don't yet have hands-on experience with it.
