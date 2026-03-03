@@ -7,5 +7,5 @@ military_service.txt - military service
 my_favorite_things.txt - favorites (color, food, band, etc.)
 personal_background.txt - family, personal life, values
 teaching_assitant.txt - my work as a teaching assistant during my studies.
-tech-stack.txt - programming languages and Technologies I'm familiar with, and experience with them (during my studies, my work etc.)
+tech-stack.txt - programming languages, technologies and frameworks I'm familiar with, and experience with them (during my studies, my work etc.)
 work_experience_ka_sys.txt - my experience working at ka-sys (including how I got the job and why I left)
