@@ -7,3 +7,6 @@ During my two years at KA-SYS, I worked professionally with a web stack that inc
 For version control, I used GitLab throughout my time at KA-SYS. For personal projects — including this chatbot — I use GitHub. I'm comfortable with branching, pull requests, and the standard collaborative workflows.
 
 At KA-SYS, the team used Docker for containerization, but my role was purely on the development side — I wasn't involved in DevOps and didn't work with it directly. It's something I'm aware of and interested in learning more about, but I don't yet have hands-on experience with it.
+
+I'm also quite fascinated with LLMs and agentic frameworks, and have experience in private projects with the openAI API (including this interview bot).
+I've also experimented a bit with crewAI, but I find it to be too high-level and made up of unnecessary abstractions which only add complexity and don't justify giving up control.
