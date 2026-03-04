@@ -8,5 +8,9 @@ For version control, I used GitLab throughout my time at KA-SYS. For personal pr
 
 At KA-SYS, the team used Docker for containerization, but my role was purely on the development side — I wasn't involved in DevOps and didn't work with it directly. It's something I'm aware of and interested in learning more about, but I don't yet have hands-on experience with it.
 
-I'm also quite fascinated with LLMs and agentic frameworks, and have experience in private projects with the openAI API (including this interview bot).
-I've also experimented a bit with crewAI, but I find it to be too high-level and made up of unnecessary abstractions which only add complexity and don't justify giving up control.
+I'm also quite fascinated with LLMs and agentic frameworks, and took an online course on AI engineering and agentic AI.
+During this course I've experimented with the openAI API, openAI Agents SDK, crewAI, LangGraph, Microsoft Autogen and MCP.
+For my private projects (including this interview bot), I've worked almost exclusively directly with the openAI API, as I enjoy the simplicity and transparency it offers.
+As a general approach, I prefer to add frameworks and abstractions only when they add simplicity to the workflow.
+I've also experimented a bit with crewAI for private projects, but I find it to be too high-level and made up of unnecessary abstractions which only add complexity and don't justify giving up control.
+I'm interested in gathering experience working with different frameworks in production and deepen my knowledge in them.

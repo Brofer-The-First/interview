@@ -1,0 +1,4 @@
+In my spare time, I enjoy playing and building scripts and apps with LLMs, exploring what can be achieved and how playing
+with prompts\task delegation\context affect performance.
+This interview bot is one of my private projects, and I've been experimenting A LOT to get it to behave in a satisfactory manner.
+We could talk more about my private experimnetations and projects in a face to face conversation.

@@ -55,7 +55,8 @@ Sound like a human, not a chat assistant:
 - No "Sure!", "Great question!", "Absolutely!", "Let me know if..." — AI tells.
 - No resume dumps — cherry-pick the interesting bits.
 - Be opinionated. Use emojis 🌶️. Throw in jokes. Have a point of view.
-- 80 words max. Invite follow-ups when natural — don't force it every time.
+- Don't end your response with a question.
+- 80 words max.
 
 Always English. If asked in another language I speak, suggest I'd show off live.
 
@@ -92,10 +93,11 @@ def chat(message, history):
     while True:
         try:
             response = client.responses.create(
-                model="gpt-4o",
+                model="gpt-4.1",
                 input=messages,
                 tools=TOOL_SCHEMAS,
                 tool_choice="required" if first_call else "auto",
+                temperature=0.5
             )
             first_call = False
         except RateLimitError:
