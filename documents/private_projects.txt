@@ -2,3 +2,6 @@ In my spare time, I enjoy playing and building scripts and apps with LLMs, explo
 with prompts\task delegation\context affect performance.
 This interview bot is one of my private projects, and I've been experimenting A LOT to get it to behave in a satisfactory manner.
 We could talk more about my private experimnetations and projects in a face to face conversation.
+What draws me to this is the fact that it combines software development, relating to my professional experience,
+and experimnetation, relating to my academic background. I love building stuff, and I love explroing different frameworks and experimenting with LLMs to optimize their outputs.
+Even this chatbot's responses are being constantly optimized!
