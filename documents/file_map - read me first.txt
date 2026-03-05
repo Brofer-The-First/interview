@@ -9,4 +9,4 @@ personal_background.txt - family, personal life, values
 teaching_assitant.txt - my work as a teaching assistant during my studies.
 tech-stack.txt - programming languages, technologies and frameworks I'm familiar with, and experience with them (during my studies, my work etc.)
 work_experience_ka_sys.txt - my experience working at ka-sys (including how I got the job and why I left)
-private_projects.txt - private projects I've worked on
+private_projects.txt - private projects I've worked on and why I love working with LLMs
