@@ -144,11 +144,11 @@ demo = gr.ChatInterface(
     examples=[
         "Tell me about yourself.",
         "What is your professional experience?",
-        "What technologies do you work with?",
+        "What technologies do you have experience with?",
         "Tell me about your education.",
         "What languages do you speak?",
         "What are you looking for in a job?",
-        "Where do you see yourself in 5 years?",
+        "Tell me about your experience with LLMs and AI.",
         "What are your hobbies and interests?"
     ],
 )
